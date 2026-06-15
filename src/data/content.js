@@ -20,11 +20,12 @@
 // ⚑ REVIEW ITEM 1 ~ Gift name. Three options below; `active` is what ships.
 // Swap `active` to the one you choose.
 export const GIFT_NAME = {
-  active: 'The Mirror',
+  active: 'The Mirror ~ What AI Can’t Replace About You', // ← chosen: metaphor + promise
   options: [
-    'The Mirror', // recommended ~ on-brand, matches the metaphor, ages well
-    "What AI Can't Replace About You", // plainer, more literal, strong for ads
-    'The Clearing' // whimsical ~ the fog that clears to reveal you
+    'The Mirror ~ What AI Can’t Replace About You', // chosen
+    'The Mirror',
+    "What AI Can’t Replace About You",
+    'The Clearing'
   ]
 }
 
@@ -37,6 +38,7 @@ export const BRAND = {
 export const LANDING = {
   eyebrow: 'a birthday gift from Chiibitsu Labs',
   title: 'The Mirror',
+  tagline: 'What AI Can’t Replace About You',
   // kept as separate lines ~ one idea per line
   lines: [
     'AI is getting faster at what you do.',
@@ -182,8 +184,8 @@ export const RESULT = {
     'This gap is what the 10-week Futureproof Me cohort is built to close.',
   bridgeLink: {
     label: 'See how the cohort works',
-    // ⚑ set to your real cohort URL before launch
-    href: '#cohort'
+    // The Futureproof challenge landing page lives at /cohort (built separately).
+    href: '/cohort'
   },
   // the boundary line is REQUIRED in the output (canon Step 10.8). The model
   // is also asked to voice this; this is the guaranteed fallback.
