@@ -157,9 +157,9 @@ export const pilot = {
     { icon: '🌱', label: 'Length', value: '10 weeks' },
     { icon: '👥', label: 'Size', value: 'Small + intimate ~ limited seats' },
   ],
-  // 🚩 REVIEW ~ PRICE. Set the founding price here. (Founding rate, not SRP.)
+  // Founding rate. SRP is ₱30k; founding-cohort price is ₱25k.
   price: {
-    placeholder: '[ FOUNDING PRICE ~ set this ]',
+    placeholder: '₱25,000',
     note: 'Founding-cohort rate for the first ones in.',
   },
   seatsNote: 'Founding seats are limited because the cohort stays small on purpose.',
@@ -174,6 +174,14 @@ export const finalCta = {
     'Ten weeks.',
   ],
   buttonLabel: 'Apply to the founding cohort',
+}
+
+// Intake = Tally (embedded). Published form: https://tally.so/r/xX6z2v
+// To swap forms, change `formId`. Submissions + notifications live in Tally.
+export const apply = {
+  formId: 'xX6z2v',
+  // Public link ~ used as a fallback if the embed can't load.
+  publicUrl: 'https://tally.so/r/xX6z2v',
 }
 
 export const footer = {

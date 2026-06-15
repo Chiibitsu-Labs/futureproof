@@ -633,81 +633,30 @@ body {
 }
 
 /* apply form */
-.apply-form {
-  max-width: 520px;
+/* Tally embed ~ white card on the dark final section */
+.tally-wrap {
+  max-width: 560px;
   margin: 0 auto;
-  text-align: left;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  background: #fff;
   border-radius: var(--radius-lg);
-  padding: clamp(24px, 4vw, 38px);
-  backdrop-filter: blur(6px);
+  padding: clamp(18px, 3vw, 28px);
+  box-shadow: var(--shadow-card);
 }
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 18px;
-}
-.field label {
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--lav-100);
-}
-.field .req { color: var(--rose); }
-.field input,
-.field textarea {
-  font-family: var(--font-sans);
-  font-size: 1rem;
-  padding: 12px 14px;
-  border-radius: 14px;
-  border: 1.5px solid rgba(255, 255, 255, 0.22);
-  background: rgba(255, 255, 255, 0.92);
-  color: var(--ink);
-  resize: vertical;
-}
-.field input:focus,
-.field textarea:focus {
-  outline: 3px solid var(--violet-400);
-  outline-offset: 1px;
-}
-.apply-form .btn {
+.tally-wrap iframe {
   width: 100%;
-  margin-top: 6px;
+  border: 0;
+  display: block;
 }
-.apply-form .btn:disabled {
-  opacity: 0.65;
-  cursor: progress;
-}
-.honeypot {
-  position: absolute;
-  left: -9999px;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-}
-.form-error {
+.tally-fallback {
   margin: 14px 0 0;
-  color: var(--rose);
-  font-weight: 600;
-}
-.form-done {
-  max-width: 520px;
-  margin: 0 auto;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1.5px solid rgba(255, 255, 255, 0.2);
-  border-radius: var(--radius-lg);
-  padding: 40px;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
   text-align: center;
 }
-.form-done-emoji { font-size: 2.4rem; margin: 0 0 8px; }
-.form-done h3 {
-  font-family: var(--font-serif);
+.tally-fallback a {
+  color: var(--violet-700);
   font-weight: 600;
-  font-size: 1.6rem;
-  margin: 0 0 10px;
 }
-.form-done p { color: var(--lav-100); margin: 0; }
 
 /* ── Footer ───────────────────────────────────────────────────────────────── */
 .footer {

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect } from 'react'
 import {
   hero,
   problem,
@@ -10,27 +10,18 @@ import {
   pilot,
   finalCta,
   footer,
+  apply,
 } from './content'
 
-// Where the apply buttons go. If VITE_APPLY_URL is set (a DM link or external
-// form), buttons open it. Otherwise they scroll to the on-page form.
-const APPLY_URL = import.meta.env.VITE_APPLY_URL || ''
-
+// CTA buttons scroll to the embedded Tally form in the apply section.
 function scrollToApply(e) {
-  if (APPLY_URL) return // let the link navigate
   e.preventDefault()
   document.getElementById('apply')?.scrollIntoView({ behavior: 'smooth' })
 }
 
 function CTAButton({ children, className = '' }) {
   return (
-    <a
-      href={APPLY_URL || '#apply'}
-      onClick={scrollToApply}
-      target={APPLY_URL ? '_blank' : undefined}
-      rel={APPLY_URL ? 'noreferrer' : undefined}
-      className={`btn ${className}`}
-    >
+    <a href="#apply" onClick={scrollToApply} className={`btn ${className}`}>
       {children}
     </a>
   )
@@ -273,96 +264,50 @@ function Pilot() {
   )
 }
 
-function ApplyForm() {
-  const [state, setState] = useState('idle') // idle | sending | done | error
-  const [form, setForm] = useState({ name: '', email: '', segment: '', why: '', honeypot: '' })
+function TallyEmbed() {
+  // Load Tally's embed script once; it turns the iframe below into a
+  // responsive, auto-resizing embed. Falls back to a plain link if it
+  // can't load (e.g. offline preview).
+  useEffect(() => {
+    const SRC = 'https://tally.so/widgets/embed.js'
+    const load = () => window.Tally?.loadEmbeds()
 
-  function update(field) {
-    return (e) => setForm((f) => ({ ...f, [field]: e.target.value }))
-  }
-
-  async function onSubmit(e) {
-    e.preventDefault()
-    setState('sending')
-    try {
-      const res = await fetch('/api/apply', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      })
-      const data = await res.json().catch(() => ({}))
-      setState(res.ok && data.ok ? 'done' : 'error')
-    } catch {
-      setState('error')
+    if (window.Tally) {
+      load()
+      return
     }
-  }
+    if (document.querySelector(`script[src="${SRC}"]`)) return
 
-  if (state === 'done') {
-    return (
-      <div className="form-done">
-        <p className="form-done-emoji">🌱</p>
-        <h3>Got it ~ thank you.</h3>
-        <p>I read every application myself. I’ll be in touch about the founding cohort.</p>
-      </div>
-    )
-  }
+    const script = document.createElement('script')
+    script.src = SRC
+    script.onload = load
+    document.body.appendChild(script)
+  }, [])
+
+  const src =
+    `https://tally.so/embed/${apply.formId}` +
+    '?alignLeft=1&hideTitle=1&dynamicHeight=1'
 
   return (
-    <form className="apply-form" onSubmit={onSubmit}>
-      <div className="field">
-        <label htmlFor="name">Your name</label>
-        <input id="name" type="text" value={form.name} onChange={update('name')} autoComplete="name" />
-      </div>
-
-      <div className="field">
-        <label htmlFor="email">
-          Email <span className="req">*</span>
-        </label>
-        <input
-          id="email"
-          type="email"
-          required
-          value={form.email}
-          onChange={update('email')}
-          autoComplete="email"
-        />
-      </div>
-
-      <div className="field">
-        <label htmlFor="segment">Which one segment of your life or work?</label>
-        <input
-          id="segment"
-          type="text"
-          value={form.segment}
-          onChange={update('segment')}
-          placeholder="e.g. my writing, my consulting, my health…"
-        />
-      </div>
-
-      <div className="field">
-        <label htmlFor="why">Why now? (a line or two)</label>
-        <textarea id="why" rows={3} value={form.why} onChange={update('why')} />
-      </div>
-
-      {/* Honeypot ~ hidden from humans, catches bots. */}
-      <input
-        className="honeypot"
-        type="text"
-        tabIndex={-1}
-        autoComplete="off"
-        value={form.honeypot}
-        onChange={update('honeypot')}
-        aria-hidden="true"
+    <div className="tally-wrap">
+      <iframe
+        data-tally-src={src}
+        loading="lazy"
+        width="100%"
+        height="420"
+        frameBorder="0"
+        marginHeight="0"
+        marginWidth="0"
+        title={finalCta.buttonLabel}
       />
-
-      <button type="submit" className="btn btn-primary btn-lg" disabled={state === 'sending'}>
-        {state === 'sending' ? 'Sending…' : finalCta.buttonLabel}
-      </button>
-
-      {state === 'error' && (
-        <p className="form-error">Something went wrong sending that. Try again, or DM me directly.</p>
-      )}
-    </form>
+      <p className="tally-fallback">
+        Form not loading?{' '}
+        <a href={apply.publicUrl} target="_blank" rel="noreferrer">
+          Open the application in a new tab
+        </a>
+        .
+      </p>
+    </div>
   )
 }
 
@@ -382,12 +327,7 @@ function FinalCTA() {
           ))}
         </div>
 
-        {/* If an external apply URL is set, point people there; else show the form. */}
-        {APPLY_URL ? (
-          <CTAButton className="btn-primary btn-lg btn-on-dark">{finalCta.buttonLabel}</CTAButton>
-        ) : (
-          <ApplyForm />
-        )}
+        <TallyEmbed />
       </div>
     </section>
   )
