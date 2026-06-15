@@ -110,13 +110,14 @@ export const forWhom = {
 }
 
 // ── Proof / testimonials ───────────────────────────────────────────────────
-// Real words from past 1:1 clients (sign-off received). A clean proof stack ~
-// how the work lands and what shifts for people. No outcome guarantees.
-// Slot 5 is reserved for the incoming "AI @ work" client testimonial.
+// Real words from clients and teams Chii has worked with (sign-off received).
+// A clean proof stack ~ how the work lands and what shifts for people. No
+// outcome guarantees. Slots 1-4 are 1:1 clients (anonymous); slot 5 is a named
+// public endorsement from the Oasis Home "AI @ Work" team lab.
 export const proof = {
   kicker: 'Proof',
   title: 'From people I’ve worked with',
-  note: 'A few honest words from past 1:1 clients.',
+  note: 'A few honest words from clients and teams I’ve worked with.',
   slots: [
     {
       id: 1,
@@ -150,8 +151,14 @@ export const proof = {
       context: 'on leaving every session with a next move',
       placeholder: 'Testimonial slot 4 ~ optional.',
     },
-    // 🚩 Slot 5 ~ reserved for the incoming "AI @ work" client testimonial.
-    { id: 5, quote: '', name: '', context: '', placeholder: 'Testimonial slot 5 ~ the AI @ work quote goes here.' },
+    {
+      id: 5,
+      quote:
+        'It wasn’t just generic template training ~ it was made with our company, our products, and each person’s role in mind. Chii made our team feel seen, and taught everyone how to actually apply AI in their own work. Every company should do this if they want to stay in the game in this new AI world.',
+      name: 'Mel Galarrita Menes',
+      context: 'Oasis Home ~ AI @ Work Lab',
+      placeholder: 'Testimonial slot 5 ~ the AI @ work quote goes here.',
+    },
   ],
 }
 
