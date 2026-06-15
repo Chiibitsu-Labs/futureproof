@@ -179,14 +179,14 @@ export const founder = {
     'For a while, I let that break me. We lost a lot. We leaned on people who loved us. There were months I’m still not ready to tell in full.',
     'Then I got one quiet month to breathe. And in the stillness, it clicked: I’d been waiting for the old world to come back. It wasn’t coming back.',
     'So I did the only thing left. I updated.',
-    'I looked hard at what had really changed ~ and at what was still, unmistakably, mine. The systems-mind. The multi-hyphenate. The way I notice what others miss. That was my own futureproof moment.',
+    'I looked hard at what had really changed ~ and at what was still, unmistakably, mine. The systems-mind. The multi-hyphenate who connects what others keep separate. And the voice I’d kept quiet for years ~ the music, the sound, the way I actually want to lead. That was my own futureproof moment: building forward from those, not away from them.',
     'I won’t pretend the money has fully caught up. It hasn’t, not yet. But the fog lifted, the clarity came back, and from that clarity the opportunities started returning ~ small ones first, then bigger ones.',
     'Somewhere in there I stopped feeling crushed and started feeling sanded ~ like something clearer was being made. By grace, and by the people who refused to let us fall.',
     'These 10 weeks are that whole process, made repeatable ~ small, daily, and built to survive real life.',
     'Not a promise that you’ll come out “safe.” A way to find the part of you the changing world can’t flatten ~ and build from it, daily.',
     'I built it because I needed it. And because I really don’t think I’m the only one.',
   ],
-  signoff: '~ Angeline',
+  signoff: '~ Angeline (Chii)',
 }
 
 // ── Pilot + price ───────────────────────────────────────────────────────────
