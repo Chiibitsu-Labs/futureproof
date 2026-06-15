@@ -27,8 +27,8 @@ export default function App() {
   const [reflection, setReflection] = useState(null)
   const [error, setError] = useState(null)
 
-  const go = useCallback((next) => {
-    setError(null)
+  const go = useCallback((next, { clearError = true } = {}) => {
+    if (clearError) setError(null)
     setStep(next)
     // ease the eye back to the top of the new screen
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -47,8 +47,8 @@ export default function App() {
       setReflection(result)
       go('reflection')
     } catch (err) {
-      setError(err.message)
-      go('signature')
+      setError(err?.message || 'The mirror clouded over. Please try again.')
+      go('signature', { clearError: false })
     }
   }, [go])
 
