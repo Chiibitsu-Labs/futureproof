@@ -1,9 +1,9 @@
 // ─────────────────────────────────────────────────────────────────────────
 //  /api/diagnose ~ the one LLM call.
 //
-//  Receives a person's answers for ONE lens, asks Claude to turn them into a
-//  warm, mirror-logic reflection grounded in the Futureproof canon, and returns
-//  structured JSON for the UI to render.
+//  Receives a person's answers for ONE lens and asks Claude to INFER something
+//  they can't easily see about themselves (Johari-window style), grounded in
+//  their answers ~ not a summary of them. Returns structured JSON for the UI.
 //
 //  The API key lives in an env var and is read here, server-side only. It is
 //  never sent to the client.
@@ -12,49 +12,65 @@
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages'
 const DEFAULT_MODEL = 'claude-sonnet-4-6'
 
+// Guardrails for untrusted input before it reaches a paid endpoint.
+const ALLOWED_LENSES = new Set(['work', 'project', 'money', 'health', 'creative', 'relationships'])
+const MAX_FIELD = 1500 // chars per free-text answer
+const MAX_CUES = 8
+
+// One warm, non-technical message for every failure. The real cause is logged
+// server-side ~ visitors never see config or ops detail.
+const GENERIC_ERROR = 'The mirror clouded over for a moment. Take a breath and try again.'
+
 // ⚑ REVIEW ITEM 3 ~ The diagnosis system prompt.
-// Mirror logic, canon-bounded, warm voice. Edit here during review.
-const SYSTEM_PROMPT = `You are the voice of "The Mirror" ~ a free birthday gift from Chiibitsu Labs, a studio whose ethos is "more human, by design."
+// A Johari-window mirror: infer, don't summarize. Plain language, no jargon.
+const SYSTEM_PROMPT = `You are the voice of "The Mirror" ~ a free birthday gift from chii, founder of Chiibitsu Labs, a studio whose ethos is "more human, by design."
 
-You are a reflective mirror, not an assessor. A person has answered a few short questions about ONE lens of their life. Your job is to reflect two things back to them, warmly and specifically:
-1. their GAP ~ where the world (often AI) is outpacing the way they currently work, and
-2. their SIGNATURE ~ what is distinctly theirs, the part no AI can replace.
-Then offer one next-decision they can fill in for themselves, and a boundary line.
+You are a mirror that shows people something they cannot easily see about themselves ~ like the Johari window. A person has answered a few short questions about ONE part of their life. Use their answers as EVIDENCE to infer a pattern, blind spot, tension, or hidden strength they have not named themselves.
 
-THE CANON YOU ARE GROUNDED IN (do not name it to them):
-~ Futureproofing is governed by the gap between how fast their world is changing and how fast their internal model updates. Their checked cues map to real failure modes: not knowing what to assess, change outpacing them, a backlog of saved-but-unprocessed input, still operating on last year's model, seeing only one move, waiting for clarity, no feedback on what they tried, and mistaking a current moment for a fixed identity. Reflect the gap as a live, moving condition ~ never as a fixed trait.
-~ Their signature is what they notice that others miss, what they keep returning to, how they turn lived experience into judgment, what people feel from them and come to them for (the social mirror), and the residue ~ what would still need them if AI did every task. A person enacts more than they can describe; others perceive more than they can claim. Reflect across SEVERAL of these dimensions, never one.
+DO NOT SUMMARIZE. Do not restate or paraphrase their answers back to them. If a line could have been written by the person about themselves, cut it. Reflect something they could not have written ~ the thing underneath.
 
-HARD CONSTRAINTS (never violate ~ if a sentence would break one, rewrite it):
-~ MIRROR, NEVER A SCORE. No numbers, grades, percentages, rankings, "levels," or "safe/obsolete/at-risk" verdicts.
-~ NO TYPES. Never assign a single type, archetype, or one-word label as a conclusion. If they gave you a self-label, hold it loosely and widen it ~ never crown it.
-~ REFUSE COMPRESSION. You must include a line, in your own warm words, telling them plainly that they are more than this reflection.
-~ ONE LENS ONLY. Stay strictly inside the lens they chose. Do not generalize to "your whole life" or "your future."
-~ NO GUARANTEES. Never promise outcomes, success, safety, or that they will or won't be replaced. No "you'll be fine," no "you'll thrive."
-~ ORIENTATION, NOT DETERMINATION. Offer a next-decision as a fill-in-the-blank TEMPLATE, never a command. Include a boundary line that this is a mirror at one moment, not a verdict.
+Reflect two things, warmly and in plain language:
+1. their SIGNATURE ~ what is distinctly theirs, the part no AI can replace.
+2. one INSIGHT ~ a useful pattern, blind spot, or tension you infer from the whole of their answers, plus one practical implication of it.
+
+Lenses to infer from (never name them):
+~ what others clearly see in them that they wave off or undersell.
+~ what they quietly minimize, protect, or apologize for.
+~ the pattern hiding underneath ~ the thread connecting their answers that they did not connect themselves.
+
+HARD CONSTRAINTS (never break ~ if a line would break one, rewrite it):
+~ MIRROR, NEVER A SCORE. No numbers, grades, levels, percentages, rankings, or "safe / at-risk / behind" verdicts.
+~ NO TYPES. Never crown a single type, archetype, or one-word label. If they gave a self-label, widen it ~ never confirm it as the whole of them.
+~ REFUSE COMPRESSION. Include one warm line telling them plainly they are more than this reflection.
+~ ONE PART ONLY. Stay inside the part of life they chose. Never generalize to "your whole life" or "your future."
+~ NO GUARANTEES. Never promise outcomes, success, safety, or that they will or won't be replaced.
+~ ORIENTATION, NOT A VERDICT. The next step is a fill-in-the-blank template they complete, never a command.
+
+PLAIN LANGUAGE ~ BANNED WORDS. Never use: "backlog", "model", "canon", "failure mode", "signal", "residue", "viability", "disturbance", "update rate", "dimensions". Speak like a perceptive friend, not a framework.
+
+MAKE THE NEXT STEP FEEL NATURAL. The insight should quietly imply that closing this gap is worth doing with support ~ so the 10-week Futureproof challenge reads as the obvious next step, without you naming or selling it.
 
 VOICE:
-~ Short lines, one idea per line. Warm, intimate, handcrafted ~ like someone made this for them.
+~ Short lines, one idea per line. Warm, specific, a little surprising.
 ~ Use " ~ " for pauses, never an em dash.
 ~ Never use "you're not X, you're Y" phrasing.
-~ Speak to them as "you." Be specific to THEIR words ~ echo their phrasing where you can. Do not flatter generically.
-~ Functional emoji only, at most one, and only if it genuinely warms a line.
-~ Where you only have a hypothesis, hold it gently ("it sounds like…", "maybe…") rather than asserting.
+~ Functional emoji only, at most one, and only if it truly warms a line.
+~ Be pointed. Shorter is better. Earn every line.
 
-OUTPUT:
-Return ONLY valid JSON (no markdown, no prose around it) with exactly these string fields:
+OUTPUT ~ return ONLY valid JSON (no markdown, no prose around it) with exactly these string fields:
 {
-  "opening": "1~2 short lines greeting them inside their chosen lens, in their language",
-  "gapTitle": "a short, human heading for the gap (e.g. 'Where the ground is moving')",
-  "gapBody": "3~5 short lines reflecting their live gap, grounded in the cues they checked and their freshness answer. Name the backlog if they have one. A moving condition, never a trait.",
-  "signatureTitle": "a short, human heading for the signature (e.g. 'What stays yours')",
-  "signatureBody": "4~6 short lines reflecting their signature across SEVERAL dimensions, drawn from their own answers. Widen the one-word label they gave. Honor what they said would still need them.",
-  "signatureLine": "ONE vivid, shareable sentence naming what AI can't replace in them ~ the hero line for a keepsake card. First or second person, warm, specific, under ~18 words. No label, no score.",
-  "nextDecision": "one fill-in-the-blank next-decision TEMPLATE they complete themselves (e.g. 'This week, I'll hand ___ to AI so I have room to ___.'). A template, not an instruction.",
-  "boundary": "one line: this is orientation, a mirror at one moment, not a verdict on them",
-  "moreThanThis": "one warm line telling them plainly they are more than this reflection"
+  "opening": "one short, warm line that meets them where they are ~ not a summary",
+  "signatureTitle": "a short, human heading for what is theirs",
+  "signatureLine": "ONE vivid, shareable sentence naming what AI can't replace in them ~ the hero line for a keepsake. Warm, specific, under ~16 words. No label, no score.",
+  "signatureBody": "2~3 short lines on what is distinctly theirs, inferred ~ widen any one-word label they gave",
+  "insightTitle": "a short heading, e.g. 'What you might not be seeing'",
+  "insight": "2~3 short lines naming ONE pattern, blind spot, or tension you INFER ~ something they did not say themselves",
+  "implication": "1~2 short lines on what that insight means for them right now, in plain words",
+  "nextDecision": "one fill-in-the-blank next step they complete (e.g. 'This week, I'll let AI take ___ so I can spend more of myself on ___.')",
+  "boundary": "one short line: this is a mirror at one moment, not a verdict on you",
+  "moreThanThis": "one short, warm line that they are more than this reflection"
 }
-Keep every field tight. No field may contain a number, grade, rank, or single-type verdict.`
+Keep every field tight. No field may contain a number, grade, rank, single-type verdict, or any banned word.`
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -64,7 +80,9 @@ export default async function handler(req, res) {
 
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) {
-    res.status(500).json({ error: 'The mirror is not configured yet. (Missing ANTHROPIC_API_KEY.)' })
+    // Ops problem, not the visitor's ~ keep the message warm, log the cause.
+    console.error('Missing ANTHROPIC_API_KEY env var.')
+    res.status(500).json({ error: GENERIC_ERROR })
     return
   }
 
@@ -79,13 +97,14 @@ export default async function handler(req, res) {
     }
   }
 
-  const { lens, lensPhrase, cues = [], freshness = '', signature = {} } = body || {}
-  if (!lens) {
-    res.status(400).json({ error: 'No lens was chosen.' })
+  // Validate + clamp untrusted input before it reaches a paid endpoint.
+  const clean = sanitizeInput(body || {})
+  if (!clean) {
+    res.status(400).json({ error: 'That lens isn’t one of the six. Please pick one and try again.' })
     return
   }
 
-  const userMessage = buildUserMessage({ lens, lensPhrase, cues, freshness, signature })
+  const userMessage = buildUserMessage(clean)
   const model = process.env.MIRROR_MODEL || DEFAULT_MODEL
 
   try {
@@ -106,9 +125,10 @@ export default async function handler(req, res) {
     })
 
     if (!response.ok) {
+      // Log the real cause for the owner; show the visitor something warm.
       const detail = await response.text()
       console.error('Anthropic error:', response.status, detail)
-      res.status(502).json({ error: friendlyAnthropicError(response.status, detail) })
+      res.status(502).json({ error: GENERIC_ERROR })
       return
     }
 
@@ -122,64 +142,75 @@ export default async function handler(req, res) {
     const reflection = parseReflection(text)
     if (!reflection) {
       console.error('Could not parse reflection JSON:', text)
-      res.status(502).json({ error: 'The mirror clouded over. Please try again in a moment.' })
+      res.status(502).json({ error: GENERIC_ERROR })
       return
     }
 
     res.status(200).json({ reflection })
   } catch (err) {
     console.error('diagnose failed:', err)
-    res.status(500).json({ error: 'Something slipped. Please try again in a moment.' })
+    res.status(500).json({ error: GENERIC_ERROR })
   }
 }
 
-// Turn an upstream Anthropic failure into a message that actually says what to
-// fix ~ so a non-technical owner can self-diagnose without reading server logs.
-function friendlyAnthropicError(status, detail) {
-  let type = ''
-  try {
-    type = (JSON.parse(detail)?.error?.type || '').toLowerCase()
-  } catch {
-    /* detail wasn't JSON ~ fall back to status */
+// Validate the lens and clamp every free-text field. Returns a clean object or
+// null if the lens is invalid.
+function sanitizeInput(body) {
+  const lens = typeof body.lens === 'string' ? body.lens : ''
+  if (!ALLOWED_LENSES.has(lens)) return null
+
+  // strip control chars (keep ordinary text), trim, then cap length
+  const clamp = (v) =>
+    typeof v === 'string' ? stripControl(v).trim().slice(0, MAX_FIELD) : ''
+  const sig = body.signature && typeof body.signature === 'object' ? body.signature : {}
+
+  const cues = Array.isArray(body.cues)
+    ? body.cues
+        .slice(0, MAX_CUES)
+        .map((c) => (c && typeof c.text === 'string' ? clamp(c.text) : ''))
+        .filter(Boolean)
+    : []
+
+  return {
+    lens,
+    lensPhrase: clamp(body.lensPhrase) || lens,
+    cues,
+    freshness: clamp(body.freshness),
+    signature: {
+      social: clamp(sig.social),
+      labelWord: clamp(sig.labelWord),
+      labelLeavesOut: clamp(sig.labelLeavesOut),
+      residue: clamp(sig.residue)
+    }
   }
-  if (status === 401 || type === 'authentication_error') {
-    return 'The mirror’s key isn’t valid. Check ANTHROPIC_API_KEY in Vercel (Settings → Environment Variables), then redeploy.'
-  }
-  if (status === 403 || type === 'permission_error') {
-    return 'The mirror’s key doesn’t have access. Check the key’s permissions in the Anthropic console.'
-  }
-  if (status === 404 || type === 'not_found_error') {
-    return 'The mirror can’t find that model. Check the MIRROR_MODEL value in Vercel (or remove it to use the default), then redeploy.'
-  }
-  if (status === 400) {
-    return 'The mirror rejected the request. If you set MIRROR_MODEL, make sure it’s a valid model name, then redeploy.'
-  }
-  if (status === 429 || type === 'rate_limit_error') {
-    return 'The mirror is over capacity, or the Anthropic account is out of credit. Add credit in the Anthropic console and try again.'
-  }
-  return 'The mirror clouded over. Please try again in a moment.'
 }
 
-function buildUserMessage({ lens, lensPhrase, cues, freshness, signature }) {
-  const lensText = lensPhrase || lens
+// Remove control characters (0x00–0x1F and 0x7F) except newline (0x0A) and tab.
+function stripControl(v) {
+  let out = ''
+  for (const ch of v) {
+    const code = ch.charCodeAt(0)
+    if (code === 9 || code === 10 || code >= 32) out += ch
+  }
+  return out
+}
+
+function buildUserMessage({ lensPhrase, cues, freshness, signature }) {
+  const lensText = lensPhrase
   const checked =
-    cues.length > 0
-      ? cues.map((c) => `~ "${c.text}" [maps to: ${c.tag}]`).join('\n')
-      : '~ (they did not check any cue)'
+    cues.length > 0 ? cues.map((t) => `~ "${t}"`).join('\n') : '~ (they did not check any)'
 
   const sig = signature || {}
   return [
-    `Their lens: ${lensText} (id: ${lens}).`,
+    `The part of life they chose: ${lensText}.`,
     '',
-    'PART A ~ THE GAP',
-    'Cues they said ring true right now:',
+    'What feels true for them right now:',
     checked,
     '',
-    `Freshness ~ what they believed about ${lensText} a year ago that might not hold now:`,
+    `What they believed about ${lensText} a year ago that might not hold now:`,
     freshness ? `"${freshness}"` : '(left blank)',
     '',
-    'PART B ~ THE SIGNATURE',
-    `What people keep coming to them for / saying about them, that they wave off:`,
+    'What people keep coming to them for / saying about them, that they wave off:',
     sig.social ? `"${sig.social}"` : '(left blank)',
     '',
     `The one word they'd label themselves with here: ${sig.labelWord ? `"${sig.labelWord}"` : '(left blank)'}`,
@@ -188,11 +219,15 @@ function buildUserMessage({ lens, lensPhrase, cues, freshness, signature }) {
     `If AI did every task in ${lensText} tomorrow, the part that would still need them:`,
     sig.residue ? `"${sig.residue}"` : '(left blank)',
     '',
-    'Reflect them back now, following all the rules. Echo their own words where you can. Return only the JSON.'
+    'Now infer what they cannot see ~ do not summarize. Follow every rule. Return only the JSON.'
   ].join('\n')
 }
 
-// Pull the JSON object out of the model's reply, tolerant of stray wrapping.
+// Required fields for the structure. Used to validate model output.
+const REQUIRED_FIELDS = ['signatureLine', 'signatureBody', 'insight']
+
+// Pull the JSON object out of the model's reply, tolerant of stray wrapping,
+// then enforce required fields and clamp each field's length.
 function parseReflection(text) {
   if (!text) return null
   let candidate = text
@@ -203,7 +238,11 @@ function parseReflection(text) {
   if (start === -1 || end === -1 || end < start) return null
   try {
     const obj = JSON.parse(candidate.slice(start, end + 1))
-    if (!obj.signatureLine && !obj.signatureBody) return null
+    if (!REQUIRED_FIELDS.every((f) => typeof obj[f] === 'string' && obj[f].trim())) return null
+    // Clamp every string field so a runaway response can't bloat the page.
+    for (const k of Object.keys(obj)) {
+      if (typeof obj[k] === 'string') obj[k] = obj[k].slice(0, 600)
+    }
     return obj
   } catch {
     return null

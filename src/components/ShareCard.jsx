@@ -57,6 +57,7 @@ export default function ShareCard({ signatureLine, lens, onClose }) {
             <div className="keepsake-footer">
               <span className="keepsake-brand">{CARD.footerBrand}</span>
               <span className="keepsake-ethos">{CARD.footerEthos}</span>
+              <span className="keepsake-url">{CARD.footerUrl}</span>
             </div>
           </div>
         </div>

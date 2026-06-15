@@ -3,6 +3,7 @@ import { RESULT } from '../data/content.js'
 import ShareCard from './ShareCard.jsx'
 
 // The gift, complete and on screen. Delivered in full before any ask.
+// Signature is the hero; one inferred insight + its implication carry the rest.
 export default function Reflection({ lens, reflection, onContinue, onRestart }) {
   const [showCard, setShowCard] = useState(false)
 
@@ -21,39 +22,45 @@ export default function Reflection({ lens, reflection, onContinue, onRestart }) 
         <Lines text={r.signatureBody} />
       </div>
 
-      <div className="reflection-block block-gap">
-        <h3 className="reflection-heading">{r.gapTitle || 'Where the ground is moving'}</h3>
-        <Lines text={r.gapBody} />
-      </div>
+      {/* One inferred insight + one practical implication. Concise on purpose. */}
+      {r.insight && (
+        <div className="reflection-block block-insight">
+          <h3 className="reflection-heading">{r.insightTitle || 'What you might not be seeing'}</h3>
+          <Lines text={r.insight} />
+          {r.implication && <p className="implication">{r.implication}</p>}
+        </div>
+      )}
 
       {r.nextDecision && (
         <div className="reflection-block block-decision">
-          <h3 className="reflection-heading">One next decision ~ yours to fill in</h3>
+          <h3 className="reflection-heading">One next move ~ yours to finish</h3>
           <p className="next-decision">{r.nextDecision}</p>
         </div>
       )}
 
-      <p className="boundary-line">{boundary}</p>
-      <p className="more-than-this">{moreThanThis}</p>
-
-      {/* Soft, skippable bridge to paid ~ never gates the result. */}
-      <div className="bridge">
-        <p>{RESULT.bridge}</p>
-        <a className="bridge-link" href={RESULT.bridgeLink.href}>
-          {RESULT.bridgeLink.label} →
-        </a>
-      </div>
+      {/* The next step ~ prominent, clearly the natural move. Still skippable. */}
+      <a className="cta-card" href={RESULT.bridgeLink.href}>
+        <span className="cta-kicker">{RESULT.bridgeKicker}</span>
+        <span className="cta-body">{RESULT.bridge}</span>
+        <span className="cta-action">{RESULT.bridgeLink.label}</span>
+      </a>
 
       <div className="reflection-actions">
         <button className="btn btn-primary" onClick={() => setShowCard(true)}>
           {RESULT.shareButton}
         </button>
         <button className="btn btn-ghost" onClick={onContinue}>
-          continue
+          {RESULT.continueButton}
         </button>
         <button className="btn-text" onClick={onRestart}>
           {RESULT.startOverButton}
         </button>
+      </div>
+
+      {/* Disclaimers kept, but quiet ~ they must not compete with the result. */}
+      <div className="disclaimers">
+        <p>{boundary}</p>
+        <p>{moreThanThis}</p>
       </div>
 
       {showCard && (
