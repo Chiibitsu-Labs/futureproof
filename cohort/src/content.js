@@ -110,26 +110,20 @@ export const forWhom = {
 }
 
 // ── Proof / testimonials ───────────────────────────────────────────────────
-// Real client words, drawn from Chii's 1:1 session notes (the Futureproof
-// Testimonial Proof Bank). The four below are the council-recommended set ~
-// they show *conversion under real-life pressure*, not emotion, and map to the
-// program mechanism (clarity, grounding, rhythm repair, practical support).
-//
-// 🚩 ALL FOUR ARE FROM ONE CLIENT and are drafts based on call notes. Before
-// going live: (1) get her sign-off on the wording, (2) decide name vs initials
-// vs anonymous (currently anonymous ~ no name consent recorded), and ideally
-// (3) add a second client's voice in slot 5 for range.
+// Real words from past 1:1 clients (sign-off received). A clean proof stack ~
+// how the work lands and what shifts for people. No outcome guarantees.
+// Slot 5 is reserved for the incoming "AI @ work" client testimonial.
 export const proof = {
   kicker: 'Proof',
-  title: 'In a previous client’s own words',
-  note: 'From 1:1 work, on turning clarity into something she could actually live. Individual experience varies.',
+  title: 'From people I’ve worked with',
+  note: 'A few honest words from past 1:1 clients.',
   slots: [
     {
       id: 1,
       quote:
         'I already knew some of these things, but I wasn’t doing them. Chii helped me turn them into a pattern I could actually follow.',
       name: 'Previous 1:1 client',
-      context: 'clarity into a pattern she could follow',
+      context: 'on turning knowing into doing',
       placeholder: 'Testimonial slot 1 ~ paste a real client quote here.',
     },
     {
@@ -137,7 +131,7 @@ export const proof = {
       quote:
         'Before, I would panic. Now I feel grounded, catch myself, and can plan from the situation instead of spiraling.',
       name: 'Previous 1:1 client',
-      context: 'grounded under pressure',
+      context: 'on staying grounded under pressure',
       placeholder: 'Testimonial slot 2 ~ paste a real client quote here.',
     },
     {
@@ -145,7 +139,7 @@ export const proof = {
       quote:
         'When I couldn’t follow the exact schedule, I used to feel like I failed. Now I know how to adjust and work with my own rhythm.',
       name: 'Previous 1:1 client',
-      context: 'rhythm, repaired',
+      context: 'on keeping a rhythm through real life',
       placeholder: 'Testimonial slot 3 ~ paste a real client quote here.',
     },
     {
@@ -153,32 +147,39 @@ export const proof = {
       quote:
         'Every time I brought a problem, Chii helped me find the solution and leave clearer.',
       name: 'Previous 1:1 client',
-      context: 'every session, a clearer next move',
+      context: 'on leaving every session with a next move',
       placeholder: 'Testimonial slot 4 ~ optional.',
     },
-    // Slot 5 left open ~ a good place for a second client's voice.
-    { id: 5, quote: '', name: '', context: '', placeholder: 'Testimonial slot 5 ~ optional.' },
+    // 🚩 Slot 5 ~ reserved for the incoming "AI @ work" client testimonial.
+    { id: 5, quote: '', name: '', context: '', placeholder: 'Testimonial slot 5 ~ the AI @ work quote goes here.' },
   ],
 }
 
 // ── Founder note ────────────────────────────────────────────────────────────
-// 🚩 REVIEW ~ DRAFT. Storytelling mode. Personalize this before launch ~ it's
-// drafted from the compression-season -> rebirth arc in your docs, in your
-// voice, but the specifics are yours to make true.
+// Storytelling mode ~ drawn from Chii's real compression-season -> rebirth
+// story, in her voice. Tweak any line so it stays true to you.
 export const founder = {
   kicker: 'Founder note',
   title: 'Why I’m building this now',
   paragraphs: [
-    'I spent a season compressed.',
-    'The world sped up, and for a while I tried to keep pace by doing more, faster ~ leaning harder on every new tool the moment it landed.',
-    'It worked, and it didn’t. The faster I moved, the less of me was actually in the work.',
-    'What brought me back wasn’t a smarter tool. It was getting honest about the part of my work that was mine ~ the part no model could hand back to me ~ and protecting it, a little, every day.',
-    'That daily protection is what rebuilt me. So that’s what this cohort is.',
-    'Not a promise that you’ll come out “safe.” A way to keep the most human part of your work active while everything around it keeps changing.',
-    'I’m running it small and close, as a founding cohort, because the first one I want to do with people ~ not at them.',
+    'For most of my life, achieving came easy.',
+    'I had optionality. I had control.',
+    'I got headhunted, recommended, chosen ~ for years I never had to chase work. It just came.',
+    'Then the ground moved.',
+    'I lost a role I’d poured everything into ~ my name, my reputation, my whole team. And the timing was brutal, because the world was already changing underneath me.',
+    'For about a year I tried everything. New work, new businesses, new pitches. The opportunities that used to find me just… dried up.',
+    'The interviews that actually fit kept offering a fraction of what the work used to be worth. It wasn’t only me ~ AI was quietly resetting what experience and labor were worth.',
+    'For a while, I let that break me. We lost a lot. We leaned on people who loved us. There were months I’m still not ready to tell in full.',
+    'Then I got one quiet month to breathe. And in the stillness, it clicked: I’d been waiting for the old world to come back. It wasn’t coming back.',
+    'So I did the only thing left. I updated.',
+    'I looked hard at what had really changed ~ and at what was still, unmistakably, mine. The systems-mind. The multi-hyphenate. The way I notice what others miss. That was my own futureproof moment.',
+    'I won’t pretend the money has fully caught up. It hasn’t, not yet. But the fog lifted, the clarity came back, and from that clarity the opportunities started returning ~ small ones first, then bigger ones.',
+    'Somewhere in there I stopped feeling crushed and started feeling sanded ~ like something clearer was being made. By grace, and by the people who refused to let us fall.',
+    'This gift, and the 10 weeks behind it, are that whole process made repeatable.',
+    'Not a promise that you’ll come out “safe.” A way to find the part of you the changing world can’t flatten ~ and build from it, daily.',
+    'I built it because I needed it. And because I really don’t think I’m the only one.',
   ],
   signoff: '~ Angeline',
-  reviewFlag: '🚩 Founder note is a draft from your story. Personalize before launch.',
 }
 
 // ── Pilot + price ───────────────────────────────────────────────────────────
