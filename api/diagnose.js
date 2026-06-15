@@ -108,7 +108,7 @@ export default async function handler(req, res) {
     if (!response.ok) {
       const detail = await response.text()
       console.error('Anthropic error:', response.status, detail)
-      res.status(502).json({ error: 'The mirror clouded over. Please try again in a moment.' })
+      res.status(502).json({ error: friendlyAnthropicError(response.status, detail) })
       return
     }
 
@@ -131,6 +131,33 @@ export default async function handler(req, res) {
     console.error('diagnose failed:', err)
     res.status(500).json({ error: 'Something slipped. Please try again in a moment.' })
   }
+}
+
+// Turn an upstream Anthropic failure into a message that actually says what to
+// fix ~ so a non-technical owner can self-diagnose without reading server logs.
+function friendlyAnthropicError(status, detail) {
+  let type = ''
+  try {
+    type = (JSON.parse(detail)?.error?.type || '').toLowerCase()
+  } catch {
+    /* detail wasn't JSON ~ fall back to status */
+  }
+  if (status === 401 || type === 'authentication_error') {
+    return 'The mirror’s key isn’t valid. Check ANTHROPIC_API_KEY in Vercel (Settings → Environment Variables), then redeploy.'
+  }
+  if (status === 403 || type === 'permission_error') {
+    return 'The mirror’s key doesn’t have access. Check the key’s permissions in the Anthropic console.'
+  }
+  if (status === 404 || type === 'not_found_error') {
+    return 'The mirror can’t find that model. Check the MIRROR_MODEL value in Vercel (or remove it to use the default), then redeploy.'
+  }
+  if (status === 400) {
+    return 'The mirror rejected the request. If you set MIRROR_MODEL, make sure it’s a valid model name, then redeploy.'
+  }
+  if (status === 429 || type === 'rate_limit_error') {
+    return 'The mirror is over capacity, or the Anthropic account is out of credit. Add credit in the Anthropic console and try again.'
+  }
+  return 'The mirror clouded over. Please try again in a moment.'
 }
 
 function buildUserMessage({ lens, lensPhrase, cues, freshness, signature }) {

@@ -21,6 +21,14 @@ export default function SignatureStep({ lens, signature, error, onChange, onSubm
       <h2 className="step-title">{SIGNATURE_PROMPTS.title}</h2>
       <p className="step-subtitle">{SIGNATURE_PROMPTS.subtitle}</p>
 
+      {error && (
+        <div className="error-banner" role="alert">
+          <p className="error-banner-title">The mirror couldn’t clear just now.</p>
+          <p className="error-banner-body">{error}</p>
+          <p className="error-banner-hint">Your answers are saved ~ press “clear the glass” to try again.</p>
+        </div>
+      )}
+
       <div className="field">
         <label className="field-label" htmlFor="sig-social">
           {SIGNATURE_PROMPTS.social.label}
@@ -82,8 +90,6 @@ export default function SignatureStep({ lens, signature, error, onChange, onSubm
           onChange={set('residue')}
         />
       </div>
-
-      {error && <p className="form-error">{error}</p>}
 
       <button className="btn btn-primary" onClick={onSubmit} disabled={!hasSomething}>
         clear the glass ✨

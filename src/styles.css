@@ -517,6 +517,33 @@ body {
   margin: 0 0 16px;
 }
 
+.error-banner {
+  width: 100%;
+  text-align: left;
+  background: rgba(255, 185, 138, 0.12);
+  border: 1px solid rgba(255, 185, 138, 0.4);
+  border-radius: 16px;
+  padding: 16px 18px;
+  margin: 4px 0 26px;
+}
+.error-banner-title {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  color: var(--ink);
+  margin: 0 0 6px;
+}
+.error-banner-body {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin: 0 0 6px;
+}
+.error-banner-hint {
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+  margin: 0;
+}
+
 /* ── Fogging / unveiling ─────────────────────────────────────────────────── */
 .screen-fogging {
   gap: 30px;
