@@ -110,19 +110,53 @@ export const forWhom = {
 }
 
 // ── Proof / testimonials ───────────────────────────────────────────────────
-// 🚩 REVIEW ~ REAL TESTIMONIALS ONLY. These are empty placeholder slots.
-// Do not ship with the placeholder text visible. Replace `quote` / `name`
-// with real quotes from previous clients (about HOW YOU WORK and real change ~
-// no outcome guarantees in the quotes). Delete any slots you don't fill.
+// Real client words, drawn from Chii's 1:1 session notes (the Futureproof
+// Testimonial Proof Bank). The four below are the council-recommended set ~
+// they show *conversion under real-life pressure*, not emotion, and map to the
+// program mechanism (clarity, grounding, rhythm repair, practical support).
+//
+// 🚩 ALL FOUR ARE FROM ONE CLIENT and are drafts based on call notes. Before
+// going live: (1) get her sign-off on the wording, (2) decide name vs initials
+// vs anonymous (currently anonymous ~ no name consent recorded), and ideally
+// (3) add a second client's voice in slot 5 for range.
 export const proof = {
   kicker: 'Proof',
-  title: 'From people who’ve worked with me',
-  note: 'Real words from real clients. Nothing borrowed, nothing invented.',
+  title: 'In a previous client’s own words',
+  note: 'From 1:1 work, on turning clarity into something she could actually live. Individual experience varies.',
   slots: [
-    { id: 1, quote: '', name: '', context: '', placeholder: 'Testimonial slot 1 ~ paste a real client quote here.' },
-    { id: 2, quote: '', name: '', context: '', placeholder: 'Testimonial slot 2 ~ paste a real client quote here.' },
-    { id: 3, quote: '', name: '', context: '', placeholder: 'Testimonial slot 3 ~ paste a real client quote here.' },
-    { id: 4, quote: '', name: '', context: '', placeholder: 'Testimonial slot 4 ~ optional.' },
+    {
+      id: 1,
+      quote:
+        'I already knew some of these things, but I wasn’t doing them. Chii helped me turn them into a pattern I could actually follow.',
+      name: 'Previous 1:1 client',
+      context: 'clarity into a pattern she could follow',
+      placeholder: 'Testimonial slot 1 ~ paste a real client quote here.',
+    },
+    {
+      id: 2,
+      quote:
+        'Before, I would panic. Now I feel grounded, catch myself, and can plan from the situation instead of spiraling.',
+      name: 'Previous 1:1 client',
+      context: 'grounded under pressure',
+      placeholder: 'Testimonial slot 2 ~ paste a real client quote here.',
+    },
+    {
+      id: 3,
+      quote:
+        'When I couldn’t follow the exact schedule, I used to feel like I failed. Now I know how to adjust and work with my own rhythm.',
+      name: 'Previous 1:1 client',
+      context: 'rhythm, repaired',
+      placeholder: 'Testimonial slot 3 ~ paste a real client quote here.',
+    },
+    {
+      id: 4,
+      quote:
+        'Every time I brought a problem, Chii helped me find the solution and leave clearer.',
+      name: 'Previous 1:1 client',
+      context: 'every session, a clearer next move',
+      placeholder: 'Testimonial slot 4 ~ optional.',
+    },
+    // Slot 5 left open ~ a good place for a second client's voice.
     { id: 5, quote: '', name: '', context: '', placeholder: 'Testimonial slot 5 ~ optional.' },
   ],
 }
