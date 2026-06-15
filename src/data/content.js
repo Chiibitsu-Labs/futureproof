@@ -34,9 +34,13 @@ export const BRAND = {
   ethos: 'more human, by design'
 }
 
+// The public home of the Mirror ~ shown on the share card so a shared image
+// leads people back. A /mirror rewrite points at the app root (see vercel.json).
+export const MIRROR_URL = 'futureproof.chiibitsu.com/mirror'
+
 // ── Landing ────────────────────────────────────────────────────────────────
 export const LANDING = {
-  eyebrow: 'a birthday gift from Chiibitsu Labs',
+  eyebrow: 'a birthday gift from chii, founder of Chiibitsu Labs',
   title: 'The Mirror',
   tagline: 'What AI Can’t Replace About You',
   // kept as separate lines ~ one idea per line
@@ -179,21 +183,21 @@ export const FOGGING = {
 
 // ── Result framing (the model fills the body; these are the fixed frames) ─────
 export const RESULT = {
-  // soft optional bridge to paid ~ secondary, skippable, never gates the result
-  bridge:
-    'This gap is what the 10-week Futureproof Me cohort is built to close.',
+  // The next step ~ prominent, clearly the natural move after seeing the gap.
+  bridgeKicker: 'the next step',
+  bridge: 'The 10-week Futureproof Me challenge is built to close exactly this gap ~ with you.',
   bridgeLink: {
-    label: 'See how the cohort works',
+    label: 'Start the challenge →',
     // The Futureproof challenge landing page lives at /cohort (built separately).
     href: '/cohort'
   },
-  // the boundary line is REQUIRED in the output (canon Step 10.8). The model
-  // is also asked to voice this; this is the guaranteed fallback.
-  boundaryFallback:
-    'This is orientation ~ a mirror at one moment, not a verdict on you.',
-  moreThanThisFallback:
-    'And you are more than any reflection can hold. This caught a glimpse, not the whole of you.',
+  // boundary + "more than this" are required by the canon. The model voices
+  // them; these are the guaranteed fallbacks. Shown quietly, not competing.
+  boundaryFallback: 'A mirror at one moment, not a verdict on you.',
+  moreThanThisFallback: 'And you are more than any reflection can hold.',
+  // headings for the two result blocks (model can override its own titles)
   shareButton: 'Make a keepsake to share',
+  continueButton: 'Keep my reflection →',
   startOverButton: 'Try another lens'
 }
 
@@ -205,6 +209,8 @@ export const CARD = {
   prelude: 'What AI can’t replace in me',
   footerBrand: 'Chiibitsu Labs',
   footerEthos: 'more human, by design',
+  // a quiet URL so a shared image leads people back to the Mirror
+  footerUrl: MIRROR_URL,
   downloadButton: 'Download my keepsake',
   // tiny whimsical line that rotates ~ a little surprise
   sparkles: [
@@ -216,20 +222,22 @@ export const CARD = {
 }
 
 // ── Opt-in (one optional ask, after the gift is delivered) ────────────────────
+// Honest by design: we only collect what you pick. We don't auto-email the
+// reflection (download the keepsake for that) ~ this is chii's way to follow up.
 export const OPTIN = {
-  title: 'Want to keep this?',
-  subtitle:
-    'I can email your reflection to you ~ and, if you like, the challenge details.\nNo list-stuffing. You can leave this blank and the gift is still yours.',
+  title: 'Stay in touch?',
+  subtitle: 'Optional. The gift is yours either way.',
   emailLabel: 'Your email',
   emailPlaceholder: 'you@somewhere.lovely',
+  interestsLabel: 'Send me:',
   interests: [
-    { id: 'cohort', label: 'The 10-week Futureproof Me cohort' },
-    { id: 'tips', label: 'Occasional free tips on futureproofing' },
-    { id: 'result', label: 'Just email me my reflection' }
+    { id: 'cohort', label: 'The 10-week challenge details' },
+    { id: 'tips', label: 'The odd useful note on futureproofing' }
   ],
-  submitButton: 'Send it to me',
-  skipButton: 'No thanks ~ I’ll keep it here',
-  thanks: 'Sent with care. Check your inbox in a moment. \u{1F49C}',
+  invalidEmail: 'That email looks off ~ mind checking it?',
+  submitButton: 'Send it',
+  skipButton: 'Skip ~ I’ll keep it here',
+  thanks: 'Got it ~ chii will be in touch. \u{1F49C}',
   thanksNoEmail: 'All good ~ the gift is yours either way.'
 }
 

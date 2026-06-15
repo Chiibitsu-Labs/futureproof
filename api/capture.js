@@ -42,18 +42,22 @@ export default async function handler(req, res) {
     signatureLine = ''
   } = body || {}
 
+  const cleanEmail = String(email).trim().slice(0, 200)
+  // Only store an email that actually looks like one.
+  const safeEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail) ? cleanEmail : ''
+
   const row = {
     timestamp: new Date().toISOString(),
-    lens,
-    email: email.trim(),
-    interests: Array.isArray(interests) ? interests.join(', ') : String(interests),
-    cues: Array.isArray(cues) ? cues.map((c) => c.tag || c.id || c).join(' | ') : '',
-    freshness,
-    social: signature.social || '',
-    labelWord: signature.labelWord || '',
-    labelLeavesOut: signature.labelLeavesOut || '',
-    residue: signature.residue || '',
-    signatureLine,
+    lens: cell(lens, 40),
+    email: safeEmail,
+    interests: cell(Array.isArray(interests) ? interests.join(', ') : interests, 200),
+    cues: cell(Array.isArray(cues) ? cues.map((c) => c.tag || c.id || c).join(' | ') : '', 400),
+    freshness: cell(freshness, 1500),
+    social: cell(signature.social, 1500),
+    labelWord: cell(signature.labelWord, 200),
+    labelLeavesOut: cell(signature.labelLeavesOut, 1500),
+    residue: cell(signature.residue, 1500),
+    signatureLine: cell(signatureLine, 600),
     token: process.env.GOOGLE_SHEET_WEBHOOK_TOKEN || ''
   }
 
@@ -75,4 +79,20 @@ export default async function handler(req, res) {
     console.error('capture failed:', err)
     res.status(200).json({ ok: true, captured: false })
   }
+}
+
+// Make a value safe for a spreadsheet cell: coerce to string, strip control
+// characters, neutralize formula-leading characters (= + - @), and cap length.
+function cell(value, max = 500) {
+  let s = value == null ? '' : String(value)
+  // remove control chars except newline/tab
+  let out = ''
+  for (const ch of s) {
+    const code = ch.charCodeAt(0)
+    if (code === 9 || code === 10 || code >= 32) out += ch
+  }
+  s = out.trim().slice(0, max)
+  // a leading =, +, -, @ can trigger formula execution in spreadsheets
+  if (/^[=+\-@]/.test(s)) s = "'" + s
+  return s
 }

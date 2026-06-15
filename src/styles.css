@@ -662,45 +662,67 @@ body {
   font-style: italic;
 }
 
-.boundary-line {
-  text-align: center;
-  font-size: 0.95rem;
-  color: var(--ink-faint);
-  margin: 22px auto 4px;
-  max-width: 32em;
-  line-height: 1.5;
-}
-.more-than-this {
-  text-align: center;
-  font-family: var(--serif);
-  font-size: 1.05rem;
+/* one inferred insight ~ kept tight */
+.block-insight .reflection-heading {
   color: var(--lavender-light);
-  margin: 0 auto 24px;
-  max-width: 32em;
-  line-height: 1.5;
+}
+.implication {
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: var(--ink);
+  margin: 12px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--glass-edge);
 }
 
-.bridge {
-  text-align: center;
-  border-top: 1px solid var(--glass-edge);
-  padding-top: 24px;
-  margin-top: 8px;
-}
-.bridge p {
-  font-size: 0.98rem;
-  color: var(--ink-soft);
-  margin: 0 0 8px;
-  line-height: 1.5;
-}
-.bridge-link {
-  color: var(--warm-soft);
-  font-size: 0.95rem;
+/* the next-step CTA ~ prominent, clearly clickable, the natural move */
+.cta-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   text-decoration: none;
-  border-bottom: 1px solid var(--warm-glow);
-  padding-bottom: 2px;
+  margin: 22px 0 6px;
+  padding: 22px 24px;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, rgba(255, 185, 138, 0.18), rgba(139, 92, 246, 0.18));
+  border: 1px solid rgba(255, 215, 173, 0.45);
+  box-shadow: 0 10px 36px rgba(91, 42, 160, 0.3);
+  transition: transform 0.25s, box-shadow 0.25s;
 }
-.bridge-link:hover {
+.cta-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 48px rgba(91, 42, 160, 0.4);
+}
+.cta-kicker {
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--warm-soft);
+}
+.cta-body {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  line-height: 1.4;
+  color: var(--ink);
+}
+.cta-action {
+  font-weight: 600;
   color: var(--warm);
+  font-size: 1rem;
+}
+
+/* disclaimers ~ present but quiet, never competing with the result */
+.disclaimers {
+  text-align: center;
+  margin: 26px auto 0;
+  max-width: 30em;
+  opacity: 0.7;
+}
+.disclaimers p {
+  font-size: 0.82rem;
+  color: var(--ink-faint);
+  line-height: 1.5;
+  margin: 0 0 3px;
 }
 
 .reflection-actions {
@@ -827,6 +849,13 @@ body {
   color: var(--ink-faint);
   letter-spacing: 0.04em;
 }
+.keepsake-url {
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  color: var(--warm-soft);
+  letter-spacing: 0.04em;
+  margin-top: 4px;
+}
 
 /* ── Opt-in ──────────────────────────────────────────────────────────────── */
 .interests {
@@ -835,6 +864,14 @@ body {
   gap: 10px;
   width: 100%;
   margin-bottom: 28px;
+}
+.interests-label {
+  margin-bottom: 2px;
+}
+.field-mini-error {
+  font-size: 0.82rem;
+  color: var(--warm-soft);
+  margin: 6px 0 0;
 }
 .interest {
   display: flex;
