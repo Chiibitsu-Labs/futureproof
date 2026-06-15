@@ -49,6 +49,9 @@ npx vercel dev               # serves the app + /api functions together
 or a deployment to respond).
 
 ## Deploy
+**Not a coder? Start with [`docs/DEPLOY.md`](docs/DEPLOY.md)** ~ a click-by-click
+walkthrough for connecting Vercel and seeing the site.
+
 Push to a repo connected to Vercel. Set env vars in the Vercel dashboard:
 - `ANTHROPIC_API_KEY` *(required)*
 - `MIRROR_MODEL` *(optional, defaults to a current Claude model)*

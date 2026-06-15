@@ -11,6 +11,7 @@ export default function Landing({ onStart }) {
       </div>
 
       <h1 className="display-title">{LANDING.title}</h1>
+      <p className="display-tagline">{LANDING.tagline}</p>
 
       <div className="lede">
         {LANDING.lines.map((line, i) => (
