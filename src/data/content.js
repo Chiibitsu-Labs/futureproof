@@ -188,8 +188,7 @@ export const RESULT = {
   bridge: 'The 10-week Futureproof Me challenge is the room where this sharpens ~ with people pushing the same edge.',
   bridgeLink: {
     label: 'Start the challenge →',
-    // The Futureproof challenge landing page (built separately, its own project).
-    href: 'https://futureproof.chiibitsu.com/cohort'
+    href: 'https://futureproof.chiibitsu.com'
   },
   // boundary + "more than this" are required by the canon. The model voices
   // them; these are the guaranteed fallbacks. Shown quietly, not competing.
