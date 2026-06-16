@@ -188,8 +188,8 @@ export const RESULT = {
   bridge: 'The 10-week Futureproof Me challenge is built to close exactly this gap ~ with you.',
   bridgeLink: {
     label: 'Start the challenge →',
-    // The Futureproof challenge landing page lives at /cohort (built separately).
-    href: '/cohort'
+    // The Futureproof challenge landing page (built separately, its own project).
+    href: 'https://futureproof.chiibitsu.com/cohort'
   },
   // boundary + "more than this" are required by the canon. The model voices
   // them; these are the guaranteed fallbacks. Shown quietly, not competing.
@@ -211,32 +211,38 @@ export const CARD = {
   footerEthos: 'more human, by design',
   // a quiet URL so a shared image leads people back to the Mirror
   footerUrl: MIRROR_URL,
-  downloadButton: 'Download my keepsake',
-  // tiny whimsical line that rotates ~ a little surprise
+  shareButton: 'Share my keepsake',
+  downloadButton: 'Download instead',
+  // text that rides along with a native share (platforms that show a caption)
+  shareText: `What AI can’t replace about me. ~ The Mirror, ${MIRROR_URL}`,
+  // a small line under the hero ~ a little punch, rotated per result
   sparkles: [
-    'kept, not scored.',
-    'a glimpse, not a verdict.',
-    'more human, by design.',
-    'yours to keep.'
+    'grown, not generated.',
+    'lived, not trained.',
+    'the part no one can copy.',
+    'irreplaceably yours.'
   ]
 }
 
 // ── Opt-in (one optional ask, after the gift is delivered) ────────────────────
-// Honest by design: we only collect what you pick. We don't auto-email the
-// reflection (download the keepsake for that) ~ this is chii's way to follow up.
+// The email assembles itself from whatever they tick here ~ so what we send is
+// always what they asked for.
 export const OPTIN = {
-  title: 'Stay in touch?',
-  subtitle: 'Optional. The gift is yours either way.',
+  title: 'Want this in your inbox?',
+  subtitle: 'Optional ~ pick what you’d like sent. The gift is yours either way.',
   emailLabel: 'Your email',
   emailPlaceholder: 'you@somewhere.lovely',
-  interestsLabel: 'Send me:',
+  interestsLabel: 'Email me:',
   interests: [
+    { id: 'reflection', label: 'My reflection' },
     { id: 'cohort', label: 'The 10-week challenge details' },
-    { id: 'tips', label: 'The odd useful note on futureproofing' }
+    { id: 'tips', label: 'Occasional notes on futureproofing' }
   ],
+  needPick: 'Pick at least one, or skip ~ either is fine.',
   invalidEmail: 'That email looks off ~ mind checking it?',
   submitButton: 'Send it',
   skipButton: 'Skip ~ I’ll keep it here',
+  thanksEmailed: 'Sent ~ check your inbox in a moment. \u{1F49C}',
   thanks: 'Got it ~ chii will be in touch. \u{1F49C}',
   thanksNoEmail: 'All good ~ the gift is yours either way.'
 }
