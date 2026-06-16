@@ -37,9 +37,17 @@ warm, on-brand message assembled from their choices.
 - **Occasional notes** ticked → a one-line "you're on the list".
 - Any combination of the above, in one email.
 
+## Get a copy of every opt-in (optional)
+Set one more env var in Vercel and you'll be blind-copied on each email that
+goes out, so you can follow up personally:
+
+| Name | Value |
+| --- | --- |
+| `MIRROR_NOTIFY_EMAIL` | `chii@chiibitsu.com` (or wherever you want the copies) |
+
+It's a **BCC**, so the visitor never sees it. If unset, no copy is sent.
+
 ## Notes
 - The opt-in screen shows "check your inbox" **only when an email actually
   sent** ~ if Resend isn't configured yet, it falls back to "chii will be in
   touch", so the copy never lies.
-- Want to also be notified yourself on each opt-in? Say the word ~ it's a few
-  lines to add a copy to your own inbox.
