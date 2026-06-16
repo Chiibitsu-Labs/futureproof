@@ -1,13 +1,18 @@
 // ─────────────────────────────────────────────────────────────────────────
 //  /api/capture ~ optional, after-the-gift opt-in.
 //
-//  Appends the person's answers + (optional) email + interests to a Google
-//  Sheet, via a Google Apps Script web app whose URL lives in an env var.
-//  See docs/google-sheet-setup.md.
+//  Writes the opt-in (email + interests + their answers) to YOUR Supabase
+//  database, so you own the data. Uses the Supabase REST API with credentials
+//  from env vars, server-side only:
+//    SUPABASE_URL  ~ e.g. https://abcd1234.supabase.co
+//    SUPABASE_KEY  ~ the publishable / anon key (safe to use with insert-only RLS)
+//  Table + policy: see docs/supabase-setup.md.
 //
-//  If GOOGLE_SHEET_WEBHOOK_URL is unset, this resolves gracefully so the gift
-//  never breaks ~ capture is a nice-to-have, never a gate.
+//  If those env vars are unset, this resolves gracefully so the gift never
+//  breaks ~ capture is a nice-to-have, never a gate.
 // ─────────────────────────────────────────────────────────────────────────
+
+const TABLE = 'mirror_optins'
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -15,9 +20,10 @@ export default async function handler(req, res) {
     return
   }
 
-  const webhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL
-  if (!webhookUrl) {
-    // No sheet configured ~ accept quietly so the experience stays whole.
+  const url = process.env.SUPABASE_URL
+  const key = process.env.SUPABASE_KEY
+  if (!url || !key) {
+    // Not configured yet ~ accept quietly so the experience stays whole.
     res.status(200).json({ ok: true, captured: false })
     return
   }
@@ -47,30 +53,33 @@ export default async function handler(req, res) {
   const safeEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail) ? cleanEmail : ''
 
   const row = {
-    timestamp: new Date().toISOString(),
     lens: cell(lens, 40),
     email: safeEmail,
     interests: cell(Array.isArray(interests) ? interests.join(', ') : interests, 200),
     cues: cell(Array.isArray(cues) ? cues.map((c) => c.tag || c.id || c).join(' | ') : '', 400),
     freshness: cell(freshness, 1500),
     social: cell(signature.social, 1500),
-    labelWord: cell(signature.labelWord, 200),
-    labelLeavesOut: cell(signature.labelLeavesOut, 1500),
+    label_word: cell(signature.labelWord, 200),
+    label_leaves_out: cell(signature.labelLeavesOut, 1500),
     residue: cell(signature.residue, 1500),
-    signatureLine: cell(signatureLine, 600),
-    token: process.env.GOOGLE_SHEET_WEBHOOK_TOKEN || ''
+    signature_line: cell(signatureLine, 600)
   }
 
   try {
-    const r = await fetch(webhookUrl, {
+    const r = await fetch(`${url.replace(/\/$/, '')}/rest/v1/${TABLE}`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        'content-type': 'application/json',
+        apikey: key,
+        authorization: `Bearer ${key}`,
+        prefer: 'return=minimal'
+      },
       body: JSON.stringify(row)
     })
     if (!r.ok) {
       const detail = await r.text()
-      console.error('Sheet webhook error:', r.status, detail)
-      // Still tell the client it's fine ~ we don't want to alarm them over a log.
+      console.error('Supabase insert error:', r.status, detail)
+      // Don't alarm the visitor over a capture hiccup ~ the gift is already theirs.
       res.status(200).json({ ok: true, captured: false })
       return
     }
@@ -81,18 +90,16 @@ export default async function handler(req, res) {
   }
 }
 
-// Make a value safe for a spreadsheet cell: coerce to string, strip control
-// characters, neutralize formula-leading characters (= + - @), and cap length.
+// Coerce to string, strip control characters (keep newline/tab), neutralize
+// any formula-leading character, and cap length.
 function cell(value, max = 500) {
   let s = value == null ? '' : String(value)
-  // remove control chars except newline/tab
   let out = ''
   for (const ch of s) {
     const code = ch.charCodeAt(0)
     if (code === 9 || code === 10 || code >= 32) out += ch
   }
   s = out.trim().slice(0, max)
-  // a leading =, +, -, @ can trigger formula execution in spreadsheets
   if (/^[=+\-@]/.test(s)) s = "'" + s
   return s
 }

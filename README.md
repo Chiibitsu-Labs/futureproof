@@ -34,8 +34,8 @@ optional email opt-in → a warm close.
 - **`/api/diagnose.js`:** one serverless function. Sends answers to Claude with a
   mirror-logic system prompt, returns structured JSON. The API key is read
   server-side only and never reaches the client.
-- **`/api/capture.js`:** optional, appends the opt-in to a Google Sheet via an
-  Apps Script webhook (`docs/google-sheet-setup.md`).
+- **`/api/capture.js`:** optional, writes the opt-in to your own Supabase
+  database so you own the data (`docs/supabase-setup.md`).
 - **Card:** styled HTML → PNG client-side with `html-to-image`. No paid service.
 - Everything portable: standard React/Node, keys in env vars.
 
@@ -55,7 +55,7 @@ walkthrough for connecting Vercel and seeing the site.
 Push to a repo connected to Vercel. Set env vars in the Vercel dashboard:
 - `ANTHROPIC_API_KEY` *(required)*
 - `MIRROR_MODEL` *(optional, defaults to a current Claude model)*
-- `GOOGLE_SHEET_WEBHOOK_URL`, `GOOGLE_SHEET_WEBHOOK_TOKEN` *(optional capture)*
+- `SUPABASE_URL`, `SUPABASE_KEY` *(optional capture ~ see `docs/supabase-setup.md`)*
 
 ## Before launch ~ read this
 **`docs/REVIEW.md`** gathers the four items flagged for sign-off: the gift name,
