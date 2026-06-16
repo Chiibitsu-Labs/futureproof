@@ -232,7 +232,7 @@ function Founder() {
           ))}
         </div>
         <p className="founder-signoff">{founder.signoff}</p>
-        <p className="review-flag">{founder.reviewFlag}</p>
+        {founder.reviewFlag && <p className="review-flag">{founder.reviewFlag}</p>}
       </div>
     </Section>
   )
