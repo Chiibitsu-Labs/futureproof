@@ -12,7 +12,7 @@
 
 const TABLE = 'mirror_optins'
 const COHORT_URL = 'https://futureproof.chiibitsu.com/cohort'
-const MIRROR_URL = 'https://futureproof.chiibitsu.com/mirror'
+const MIRROR_URL = 'https://mirror.chiibitsu.com'
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {

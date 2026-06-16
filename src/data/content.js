@@ -35,8 +35,8 @@ export const BRAND = {
 }
 
 // The public home of the Mirror ~ shown on the share card so a shared image
-// leads people back. A /mirror rewrite points at the app root (see vercel.json).
-export const MIRROR_URL = 'futureproof.chiibitsu.com/mirror'
+// leads people back. Lives on its own subdomain (see docs/domain-setup.md).
+export const MIRROR_URL = 'mirror.chiibitsu.com'
 
 // ── Landing ────────────────────────────────────────────────────────────────
 export const LANDING = {
@@ -185,7 +185,7 @@ export const FOGGING = {
 export const RESULT = {
   // The next step ~ prominent, clearly the natural move after seeing the gap.
   bridgeKicker: 'the next step',
-  bridge: 'The 10-week Futureproof Me challenge is built to close exactly this gap ~ with you.',
+  bridge: 'The 10-week Futureproof Me challenge is the room where this sharpens ~ with people pushing the same edge.',
   bridgeLink: {
     label: 'Start the challenge →',
     // The Futureproof challenge landing page (built separately, its own project).
@@ -212,12 +212,12 @@ export const CARD = {
   // a quiet URL so a shared image leads people back to the Mirror
   footerUrl: MIRROR_URL,
   shareButton: 'Share my keepsake',
-  downloadButton: 'Download instead',
+  downloadButton: 'Save the image',
   // text that rides along with a native share (platforms that show a caption)
   shareText: `What AI can’t replace about me. ~ The Mirror, ${MIRROR_URL}`,
   // explicit social buttons (desktop-friendly) ~ these share the Mirror *link* to
   // invite others, since X/FB/LinkedIn can't attach the personal keepsake image.
-  socialLabel: 'or share the Mirror with someone:',
+  socialLabel: 'or invite someone with a link:',
   socialCaption: 'I just met the part of me AI can’t replace. Find yours ~',
   copyButton: 'Copy link',
   copiedNote: 'Link copied ~ paste it anywhere.',
