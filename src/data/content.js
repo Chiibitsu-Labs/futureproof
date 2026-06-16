@@ -225,21 +225,24 @@ export const CARD = {
 }
 
 // ── Opt-in (one optional ask, after the gift is delivered) ────────────────────
-// Honest by design: we only collect what you pick. We don't auto-email the
-// reflection (download the keepsake for that) ~ this is chii's way to follow up.
+// The email assembles itself from whatever they tick here ~ so what we send is
+// always what they asked for.
 export const OPTIN = {
-  title: 'Stay in touch?',
-  subtitle: 'Optional. The gift is yours either way.',
+  title: 'Want this in your inbox?',
+  subtitle: 'Optional ~ pick what you’d like sent. The gift is yours either way.',
   emailLabel: 'Your email',
   emailPlaceholder: 'you@somewhere.lovely',
-  interestsLabel: 'Send me:',
+  interestsLabel: 'Email me:',
   interests: [
+    { id: 'reflection', label: 'My reflection' },
     { id: 'cohort', label: 'The 10-week challenge details' },
-    { id: 'tips', label: 'The odd useful note on futureproofing' }
+    { id: 'tips', label: 'Occasional notes on futureproofing' }
   ],
+  needPick: 'Pick at least one, or skip ~ either is fine.',
   invalidEmail: 'That email looks off ~ mind checking it?',
   submitButton: 'Send it',
   skipButton: 'Skip ~ I’ll keep it here',
+  thanksEmailed: 'Sent ~ check your inbox in a moment. \u{1F49C}',
   thanks: 'Got it ~ chii will be in touch. \u{1F49C}',
   thanksNoEmail: 'All good ~ the gift is yours either way.'
 }
