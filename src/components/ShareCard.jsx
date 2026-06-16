@@ -2,6 +2,31 @@ import { useRef, useState, useMemo } from 'react'
 import { toPng } from 'html-to-image'
 import { CARD } from '../data/content.js'
 
+// The public Mirror link people land on. CARD.footerUrl has no scheme, so add one.
+const MIRROR_LINK = `https://${String(CARD.footerUrl).replace(/^https?:\/\//, '')}`
+
+// Where each button opens. X/Facebook/LinkedIn share a LINK (they can't attach
+// the personal keepsake PNG); the link's page provides the preview image.
+const SOCIALS = [
+  {
+    id: 'x',
+    label: 'X',
+    href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      `${CARD.socialCaption} ${MIRROR_LINK}`
+    )}`
+  },
+  {
+    id: 'linkedin',
+    label: 'LinkedIn',
+    href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(MIRROR_LINK)}`
+  },
+  {
+    id: 'facebook',
+    label: 'Facebook',
+    href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(MIRROR_LINK)}`
+  }
+]
+
 // ⚑ REVIEW ITEM 4 ~ the shareable keepsake.
 // A small luminous card in the violet palette. The signature line is the hero,
 // never the gap. Rendered as styled HTML to a PNG ~ no paid service.
@@ -57,6 +82,19 @@ export default function ShareCard({ signatureLine, lens, onClose }) {
     }
   }
 
+  const openSocial = (href) => {
+    window.open(href, '_blank', 'noopener,noreferrer,width=600,height=640')
+  }
+
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(MIRROR_LINK)
+      setNote(CARD.copiedNote)
+    } catch {
+      setNote(MIRROR_LINK)
+    }
+  }
+
   const download = async () => {
     if (!cardRef.current) return
     setBusy(true)
@@ -106,6 +144,25 @@ export default function ShareCard({ signatureLine, lens, onClose }) {
           <button className="btn-text" onClick={download} disabled={busy}>
             {CARD.downloadButton}
           </button>
+
+          <p className="card-social-label">{CARD.socialLabel}</p>
+          <div className="card-socials">
+            {SOCIALS.map((s) => (
+              <button
+                key={s.id}
+                type="button"
+                className={`social-btn social-${s.id}`}
+                onClick={() => openSocial(s.href)}
+                aria-label={`Share on ${s.label}`}
+              >
+                {s.label}
+              </button>
+            ))}
+            <button type="button" className="social-btn social-copy" onClick={copyLink}>
+              {CARD.copyButton}
+            </button>
+          </div>
+
           {note && <p className="card-note">{note}</p>}
         </div>
       </div>
