@@ -215,6 +215,12 @@ export const CARD = {
   downloadButton: 'Download instead',
   // text that rides along with a native share (platforms that show a caption)
   shareText: `What AI can’t replace about me. ~ The Mirror, ${MIRROR_URL}`,
+  // explicit social buttons (desktop-friendly) ~ these share the Mirror *link* to
+  // invite others, since X/FB/LinkedIn can't attach the personal keepsake image.
+  socialLabel: 'or share the Mirror with someone:',
+  socialCaption: 'I just met the part of me AI can’t replace. Find yours ~',
+  copyButton: 'Copy link',
+  copiedNote: 'Link copied ~ paste it anywhere.',
   // a small line under the hero ~ a little punch, rotated per result
   sparkles: [
     'grown, not generated.',

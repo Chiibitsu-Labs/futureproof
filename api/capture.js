@@ -111,6 +111,11 @@ async function sendEmail({ safeEmail, picks, reflection, signatureLine }) {
 
   const html = buildEmailHtml({ wantsReflection, wantsCohort, wantsTips, reflection, signatureLine })
 
+  const payload = { from, to: [safeEmail], subject, html }
+  // Optionally send a copy to chii so each opt-in can be followed up personally.
+  const notify = process.env.MIRROR_NOTIFY_EMAIL
+  if (notify) payload.bcc = [notify]
+
   try {
     const r = await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -118,7 +123,7 @@ async function sendEmail({ safeEmail, picks, reflection, signatureLine }) {
         'content-type': 'application/json',
         authorization: `Bearer ${apiKey}`
       },
-      body: JSON.stringify({ from, to: [safeEmail], subject, html })
+      body: JSON.stringify(payload)
     })
     if (!r.ok) {
       console.error('Resend error:', r.status, await r.text())
