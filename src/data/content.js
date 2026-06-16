@@ -188,8 +188,8 @@ export const RESULT = {
   bridge: 'The 10-week Futureproof Me challenge is built to close exactly this gap ~ with you.',
   bridgeLink: {
     label: 'Start the challenge →',
-    // The Futureproof challenge landing page lives at /cohort (built separately).
-    href: '/cohort'
+    // The Futureproof challenge landing page (built separately, its own project).
+    href: 'https://futureproof.chiibitsu.com/cohort'
   },
   // boundary + "more than this" are required by the canon. The model voices
   // them; these are the guaranteed fallbacks. Shown quietly, not competing.
@@ -211,13 +211,16 @@ export const CARD = {
   footerEthos: 'more human, by design',
   // a quiet URL so a shared image leads people back to the Mirror
   footerUrl: MIRROR_URL,
-  downloadButton: 'Download my keepsake',
-  // tiny whimsical line that rotates ~ a little surprise
+  shareButton: 'Share my keepsake',
+  downloadButton: 'Download instead',
+  // text that rides along with a native share (platforms that show a caption)
+  shareText: `What AI can’t replace about me. ~ The Mirror, ${MIRROR_URL}`,
+  // a small line under the hero ~ a little punch, rotated per result
   sparkles: [
-    'kept, not scored.',
-    'a glimpse, not a verdict.',
-    'more human, by design.',
-    'yours to keep.'
+    'grown, not generated.',
+    'lived, not trained.',
+    'the part no one can copy.',
+    'irreplaceably yours.'
   ]
 }
 
